@@ -1,0 +1,36 @@
+package com.xworkz.countryapp.repository;
+
+import com.xworkz.countryapp.entity.TelivisionEntity;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.Column;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+@Component
+public class TelivisionRepositoryImpl implements TelivisionRepository {
+    static private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Keerthi");
+
+    @Override
+    public boolean save(TelivisionEntity telivisionEntity) {
+        boolean isSaved=false;
+        EntityManager entityManager = emf.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(telivisionEntity);
+            entityManager.getTransaction().commit();
+            isSaved = true;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }
+        }
+        finally {
+            entityManager.close();
+        }
+        return isSaved;
+    }
+    }
+
